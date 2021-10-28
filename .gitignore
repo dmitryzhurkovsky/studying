@@ -1,6 +1,7 @@
 .DS_Store
-node_modules
-/dist
+vue/.DS_Store
+vue/node_modules
+vue/dist
 
 
 # local env files
@@ -8,14 +9,15 @@ node_modules
 .env.*.local
 
 # Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+vue/npm-debug.log*
+vue/yarn-debug.log*
+vue/yarn-error.log*
+vue/pnpm-debug.log*
 
 # Editor directories and files
 .idea
-.vscode
+vue/.idea
+vue/.vscode
 *.suo
 *.ntvs*
 *.njsproj
