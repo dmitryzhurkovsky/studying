@@ -6,6 +6,7 @@
     <h1>Posts page</h1>
     <my-input
         v-model="searchQuery"
+        v-focus
         placeholder="Search ..."
     />
     <div class="app__btns">
@@ -43,7 +44,7 @@
     <!--    </div>-->
 
     <!--    Check it's the end of page?-->
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="LoadMorePosts" class="observer"></div>
   </div>
 </template>
 
@@ -127,17 +128,6 @@ export default {
     this.fetchPosts();
     //  Functional for infinity scrolling:
     console.log(this.$refs.observer)
-    const options = {
-      rootMargin: '0px',
-      threshold: 1.0
-    }
-    const callback = (entries, observer) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        this.LoadMorePosts()
-      }
-    };
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPost() {
