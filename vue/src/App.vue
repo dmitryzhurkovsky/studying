@@ -26,21 +26,24 @@
     >
     </post-list>
     <div v-else>Loading posts...</div>
-    <div class="page__wrapper">
-      <div
-          v-for="pageNumber in totalPages"
-          :key="pageNumber"
-          class="page"
-          :class="{
-            // The same way you can bind styles.
-            // key - название класса, значение - какое-то логическое условие
-            'current-page': page === pageNumber
-          }"
-          @click="changePage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </div>
-    </div>
+    <!--    <div class="page__wrapper">-->
+    <!--      <div-->
+    <!--          v-for="pageNumber in totalPages"-->
+    <!--          :key="pageNumber"-->
+    <!--          class="page"-->
+    <!--          :class="{-->
+    <!--            // The same way you can bind styles.-->
+    <!--            // key - название класса, значение - какое-то логическое условие-->
+    <!--            'current-page': page === pageNumber-->
+    <!--          }"-->
+    <!--          @click="changePage(pageNumber)"-->
+    <!--      >-->
+    <!--        {{ pageNumber }}-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <!--    Check it's the end of page?-->
+    <div ref="observer" class="observer"></div>
   </div>
 </template>
 
@@ -81,10 +84,10 @@ export default {
     showDialog() {
       this.dialogVisible = true
     },
-    changePage(pageNumber) {
-      this.page = pageNumber;
-      // this.fetchPosts() - comment to practise watch property, See watch property.
-    },
+    // changePage(pageNumber) {
+    //   this.page = pageNumber;
+    //   // this.fetchPosts() - comment to practise watch property, See watch property.
+    // },
     async fetchPosts() {
       try {
         this.isPostsLoading = true;
@@ -102,10 +105,39 @@ export default {
       } finally {
         this.isPostsLoading = false;
       }
+    },
+    async LoadMorePosts() {
+      try {
+        this.page += 1
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+          params: {
+            _page: this.page,
+            _limit: this.limit
+          }
+        });
+        // Округдение в большую сторону - Math.ceil.
+        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
+        this.posts = [...this.posts, ...response.data];
+      } catch (e) {
+        alert('Error')
+      }
     }
   },
   mounted() {
     this.fetchPosts();
+    //  Functional for infinity scrolling:
+    console.log(this.$refs.observer)
+    const options = {
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+    const callback = (entries, observer) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.LoadMorePosts()
+      }
+    };
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPost() {
@@ -120,10 +152,10 @@ export default {
     }
   },
   watch: {
-    page() {
-      // 2 way to resolve this task is in methods -> changePage
-      this.fetchPosts()
-    }
+    // page() {
+    //   // 2 way to resolve this task is in methods -> changePage
+    //   this.fetchPosts()
+    // }
     //   // Наблюдаемая функция
     //   // Функция наблюдатель должна иметь такое же название как и моделька. Параметр принимаемая - значение, на которое
     //   // была изменена моделька
@@ -166,5 +198,10 @@ export default {
 
 .current-page {
   border: 2px solid teal;
+}
+
+.observer {
+  height: 30px;
+  background: greenyellow;
 }
 </style>
