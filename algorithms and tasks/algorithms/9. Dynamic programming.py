@@ -1,4 +1,5 @@
 """Find the longest common subsequence between two words"""
+from functools import reduce
 from typing import Union
 # import numpy as np
 
@@ -35,6 +36,7 @@ def find__common_subsequence(
         if tmp_identical_letters > identical_letters:
             correct_word = word_from_dictionary
             supposed_words[word_from_dictionary] = tmp_identical_letters
+            subsequences_of_identical_length = 1
 
         elif identical_letters == tmp_identical_letters:
             supposed_words[word_from_dictionary] = tmp_identical_letters
@@ -51,3 +53,4 @@ def find__common_subsequence(
 if __name__ == '__main__':
     result = find__common_subsequence(dictionary=test_dictionary, misspelled_word=input_misspelled_word)
     print(result)
+
