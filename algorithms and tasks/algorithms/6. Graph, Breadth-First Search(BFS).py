@@ -17,6 +17,7 @@ def person_is_seller(name: str) -> bool:
 
 
 def search() -> bool:
+    """Isn't greedy algorithm"""
     search_queue = deque()
     search_queue += graph['i']
     searched = set()

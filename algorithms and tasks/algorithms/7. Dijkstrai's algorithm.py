@@ -46,7 +46,7 @@ def find_lowest_cost_node(costs: dict) -> str:
     return lowest_cost_node
 
 
-
+"""Isn't greedy algorithm"""
 node = find_lowest_cost_node(costs)
 while node is not None:
     cost = costs[node]

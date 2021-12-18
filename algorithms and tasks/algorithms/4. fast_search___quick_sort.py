@@ -1,4 +1,5 @@
 def quick_sort(array: list) -> list:
+    """O(n*n). Isn't greedy algorithm"""
     if len(array) < 2:
         return array
     else:
